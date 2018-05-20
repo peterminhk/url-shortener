@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:urlshortener_test;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  main:
+    banner-mode: 'OFF'
+
+logging:
+  level:
+    com.peterminhk.app.urlshortener: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE

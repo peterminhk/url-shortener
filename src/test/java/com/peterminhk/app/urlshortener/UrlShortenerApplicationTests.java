@@ -1,4 +1,4 @@
-package com.peterminhk.app.urlshortner;
+package com.peterminhk.app.urlshortener;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    platform: mysql
+    url: jdbc:mysql://localhost:13306/urlshortener?useSSL=false
+    username: urlshortener
+    password: "usus12!@"
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    initialize: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+  main:
+    banner-mode: 'OFF'
