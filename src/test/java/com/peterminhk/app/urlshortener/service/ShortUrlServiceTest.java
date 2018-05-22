@@ -1,0 +1,57 @@
+package com.peterminhk.app.urlshortener.service;
+
+import com.peterminhk.app.urlshortener.MockBaseTest;
+import com.peterminhk.app.urlshortener.domain.ShortUrl;
+import com.peterminhk.app.urlshortener.dto.ShortUrlDto;
+import com.peterminhk.app.urlshortener.repository.ShortUrlRepository;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+
+@RunWith(SpringRunner.class)
+public class ShortUrlServiceTest extends MockBaseTest {
+
+	@InjectMocks
+	private ShortUrlService shortUrlService;
+
+	@MockBean
+	private ShortUrlRepository shortUrlRepository;
+
+	@MockBean
+	private ShorteningKeyService shorteningKeyService;
+
+	@Test
+	public void findByOriginalUrl() {
+		String expectedKey = "keykey00";
+		String expectedOriginalUrl = "http://some.url.com/blahblah";
+
+		given(shortUrlRepository.findByOriginalUrl(anyString())).willReturn(
+				Optional.of(new ShortUrl(expectedKey, expectedOriginalUrl)));
+
+		String input = "http://some.url.com/blahblah";
+		ShortUrlDto result = shortUrlService.findByOriginalUrl(input).get();
+
+		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
+		assertEquals(expectedOriginalUrl, result.getOriginalUrl());
+	}
+
+	@Test
+	public void generateShortUrl() {
+		String expectedKey = "newkey00";
+		given(shorteningKeyService.newKey()).willReturn(expectedKey);
+
+		ShortUrlDto result = shortUrlService.generateShortUrl("http://some.url.com/blahblah");
+
+		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
+		assertEquals("http://some.url.com/blahblah", result.getOriginalUrl());
+	}
+
+}

@@ -6,9 +6,23 @@ spring:
     password: "usus12!@"
     driver-class-name: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    initialize: false
+    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: none
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  mvc:
+    favicon:
+      enabled: false
   main:
     banner-mode: 'OFF'
+
+logging:
+  level:
+    com.peterminhk.app.urlshortener: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
