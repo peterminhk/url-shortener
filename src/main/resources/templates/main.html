@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Url Shortener</title>
+</head>
+<body>
+<h1>Url Shortener</h1>
+<form action="/urls" method="POST">
+	<label for="input-url">URL</label>
+	<input id="input-url" name="url" type="url" maxlength="2083" placeholder="URL을 입력하세요.">
+	<input id="submit" type="submit">
+</form>
+<section>
+	<div class="short-url"></div>
+	<div class="message"></div>
+</section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/main.js"></script>
+<script>
+$(document).ready(function() {
+	new MainComponent().init();
+});
+</script>
+</body>
+</html>

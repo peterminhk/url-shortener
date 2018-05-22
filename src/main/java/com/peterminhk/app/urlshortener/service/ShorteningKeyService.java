@@ -21,6 +21,7 @@ public class ShorteningKeyService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShorteningKeyService.class);
 
+	// TODO capacity, threshold 조정
 	/** Key를 저장할 queue의 크기 */
 	private static final int KEY_QUEUE_CAPACITY = 3;
 

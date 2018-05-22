@@ -1,4 +1,4 @@
-package com.peterminhk.app.urlshortener.controller;
+package com.peterminhk.app.urlshortener.controller.api;
 
 import com.peterminhk.app.urlshortener.dto.ShortUrlDto;
 import com.peterminhk.app.urlshortener.service.ShortUrlService;
@@ -44,7 +44,7 @@ public class UrlControllerTest {
 		given(shortUrlService.generateShortUrl(anyString())).willReturn(
 				new ShortUrlDto(expectedShortUrl, inputUrl));
 
-		mockMvc.perform(post("/urls")
+		mockMvc.perform(post("/api/urls")
 				.param("url", inputUrl)
 				.characterEncoding("UTF-8")
 				.accept(MediaType.APPLICATION_JSON_UTF8))
@@ -63,7 +63,7 @@ public class UrlControllerTest {
 		given(shortUrlService.findByOriginalUrl(anyString())).willReturn(
 				Optional.of(new ShortUrlDto(expectedShortUrl, inputUrl)));
 
-		mockMvc.perform(post("/urls")
+		mockMvc.perform(post("/api/urls")
 				.param("url", inputUrl)
 				.characterEncoding("UTF-8")
 				.accept(MediaType.APPLICATION_JSON_UTF8))
@@ -76,7 +76,7 @@ public class UrlControllerTest {
 
 	@Test
 	public void urlsGet() throws Exception {
-		mockMvc.perform(get("/urls"))
+		mockMvc.perform(get("/api/urls"))
 				.andExpect(status().isMethodNotAllowed());
 	}
 

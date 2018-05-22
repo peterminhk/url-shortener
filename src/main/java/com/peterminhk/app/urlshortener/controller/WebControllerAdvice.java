@@ -8,8 +8,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
+
 @ControllerAdvice
 public class WebControllerAdvice {
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	ResponseEntity<Object> clientErrorHandler(ConstraintViolationException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	ResponseEntity<Object> argumentErrorHandler(
@@ -24,7 +31,7 @@ public class WebControllerAdvice {
 
 	@ExceptionHandler(HttpServerErrorException.class)
 	ResponseEntity<Object> serverErrorHandler(HttpServerErrorException ex) {
-		return new ResponseEntity<>(ex.getStatusCode());
+		return new ResponseEntity<>(ex.getMessage(), ex.getStatusCode());
 	}
 
 }
