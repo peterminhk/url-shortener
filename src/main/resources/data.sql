@@ -1,5 +1,1 @@
-INSERT INTO short_url_id (
-  next_id
-) VALUES (
-  1
-);
+INSERT INTO shortening_key_seq (next_seq) VALUES (1);

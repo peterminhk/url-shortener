@@ -16,5 +16,5 @@ CREATE TABLE short_url (
 
   PRIMARY KEY (id),
   INDEX (shortening_key),
-  INDEX (original_url)
+  INDEX (original_url(200))
 );

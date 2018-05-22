@@ -10,21 +10,21 @@ public class ShorteningKeyGeneratorTest {
 
 	@Test
 	public void generateKey() {
-		// 최소 ID 값으로 key를 생성할 때
+		// 최소 seq 값으로 key를 생성할 때
 		assertEquals("yZyH7Y9A",
 				ShorteningKeyGenerator.generateKey(1));
 
-		// 최대 ID 값으로 key를 생성할 때
+		// 최대 seq 값으로 key를 생성할 때
 		assertEquals("0000003V",
 				ShorteningKeyGenerator.generateKey(218340105584896L));
 
-		// (최대 ID 값 + 1)로 key를 생성할 때
-		// 최소 ID 값으로 key를 생성한 것과 같은 값이 나와야 한다.
+		// (최대 seq 값 + 1)로 key를 생성할 때
+		// 최소 seq 값으로 key를 생성한 것과 같은 값이 나와야 한다.
 		assertEquals("yZyH7Y9A",
 				ShorteningKeyGenerator.generateKey(218340105584897L));
 
-		// (최대 ID 값 * 2)로 key를 생성할 때
-		// 최대 ID 값으로 key를 생성한 것과 같은 값이 나와야 한다.
+		// (최대 seq 값 * 2)로 key를 생성할 때
+		// 최대 seq 값으로 key를 생성한 것과 같은 값이 나와야 한다.
 		assertEquals("0000003V",
 				ShorteningKeyGenerator.generateKey(218340105584896L * 2));
 
