@@ -9,10 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -37,8 +39,10 @@ public class ShortUrlServiceTest extends MockBaseTest {
 				Optional.of(new ShortUrl(expectedKey, expectedOriginalUrl)));
 
 		String input = "http://some.url.com/blahblah";
-		ShortUrlDto result = shortUrlService.findByOriginalUrl(input).get();
+		ShortUrlDto result = shortUrlService.findByOriginalUrl(input)
+				.orElse(null);
 
+		assertNotNull(result);
 		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
 		assertEquals(expectedOriginalUrl, result.getOriginalUrl());
 	}
@@ -52,6 +56,12 @@ public class ShortUrlServiceTest extends MockBaseTest {
 
 		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
 		assertEquals("http://some.url.com/blahblah", result.getOriginalUrl());
+	}
+
+	@Test(expected = HttpServerErrorException.class)
+	public void generateShortUrlWhenKeyIsNull() {
+		given(shorteningKeyService.newKey()).willReturn(null);
+		shortUrlService.generateShortUrl("http://some.url.com/blahblah");
 	}
 
 }

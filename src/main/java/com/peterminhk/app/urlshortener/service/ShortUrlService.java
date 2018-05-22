@@ -4,7 +4,9 @@ import com.peterminhk.app.urlshortener.domain.ShortUrl;
 import com.peterminhk.app.urlshortener.dto.ShortUrlDto;
 import com.peterminhk.app.urlshortener.repository.ShortUrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 
 import java.util.Optional;
 
@@ -19,7 +21,7 @@ public class ShortUrlService {
 	@Autowired
 	private ShorteningKeyService shorteningKeyService;
 
-	private static final ShortUrlDto convertToDto(ShortUrl shortUrl) {
+	private static ShortUrlDto convertToDto(ShortUrl shortUrl) {
 		return new ShortUrlDto(
 				SHORT_URL_PREFIX + shortUrl.getShorteningKey(),
 				shortUrl.getOriginalUrl()
@@ -32,13 +34,15 @@ public class ShortUrlService {
 	}
 
 	public ShortUrlDto generateShortUrl(String url) {
-		ShortUrl shortUrl = new ShortUrl(shorteningKeyService.newKey(), url);
-		if (shortUrl == null) {
-			// TODO throws exception
-			return null;
+		String key = shorteningKeyService.newKey();
+
+		if (key == null) {
+			throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+		ShortUrl shortUrl = new ShortUrl(key, url);
 		shortUrlRepository.save(shortUrl);
+
 		return convertToDto(shortUrl);
 	}
 
