@@ -1,7 +1,6 @@
 package com.peterminhk.app.urlshortener.controller;
 
 import com.peterminhk.app.urlshortener.dto.ShortUrlDto;
-import com.peterminhk.app.urlshortener.repository.ShortUrlRepository;
 import com.peterminhk.app.urlshortener.service.ShortUrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UrlController {
-
-	@Autowired
-	private ShortUrlRepository shortUrlRepository;
 
 	@Autowired
 	private ShortUrlService shortUrlService;
