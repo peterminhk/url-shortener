@@ -70,17 +70,17 @@ public final class ShorteningKeyGenerator {
 		final String[] keys = new String[count];
 		final Random random = new Random();
 		int randomIndex;
-		int generated = 0;
+		int resultIndex = 0;
 
-		while (generated < count) {
+		while (resultIndex < count) {
 			randomIndex = random.nextInt(count);
 
 			if (keys[randomIndex] != null) {
 				continue;
 			}
 
-			keys[randomIndex] = generateKey(beginSeq + randomIndex);
-			generated++;
+			keys[resultIndex] = generateKey(beginSeq + randomIndex);
+			resultIndex++;
 		}
 
 		return keys;

@@ -33,10 +33,9 @@ custom:
   short-url-prefix: http://localhost:8080/
   shortening-key-queue:
     # Key를 저장할 queue의 크기
-    capacity: 3
-    # kqyQueue에 추가로 key를 채워 넣을 경계점. kqyQueue의 크기가 이 값 미만이 되면 key를 추가
-    # 로 채워넣는다.
-    fill-threshold: 3
+    capacity: 1000
+    # kqyQueue에 추가로 key를 채워 넣을 경계점. kqyQueue의 크기가 이 값 미만이 되면 key를 추가로 채워넣는다.
+    fill-threshold: 100
     # keyQueue에서 key를 꺼낼 때 기다릴 시간 (단위: ms)
     timeout: 500
 
