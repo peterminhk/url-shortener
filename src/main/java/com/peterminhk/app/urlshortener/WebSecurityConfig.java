@@ -19,10 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		// TODO enable csrf in production
 		http
-			.csrf()
-				.disable()
 			.authorizeRequests()
 				.anyRequest().permitAll();
 	}

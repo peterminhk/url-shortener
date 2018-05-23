@@ -5,10 +5,12 @@
 		_inputUrlRef: null,
 		_resultRef: null,
 		_currentResult: null,
+		_csrf_header: null,
+		_csrf_token: null,
 
 		init: function() {
 			var self = this;
-		
+
 			$('form').submit(function(event) {
 				self._onSubmit(event);
 			});
@@ -19,14 +21,22 @@
 
 			this._inputUrlRef = $('#input-url')[0];
 			this._resultRef = $('.result')[0];
+			this._csrf_header = $("meta[name='_csrf_header']").attr("content");
+			this._csrf_token = $("meta[name='_csrf']").attr("content");
 		},
-		
+
 		_onSubmit: function(event) {
 			event.preventDefault();
 			var self = this;
-		
-			$.post('/api/urls', {
-				url: this._inputUrlRef.value
+
+			$.post({
+				url: '/api/urls',
+				headers: {
+					[this._csrf_header]: this._csrf_token
+				},
+				data: {
+					url: this._inputUrlRef.value
+				}
 			}).done(function(data) {
 				self._showShortUrl(data.shortUrl);
 			}).fail(function(e) {
@@ -34,12 +44,18 @@
 					self._showError('올바른 URL을 입력해주세요.');
 				} else {
 					if (e.responseText) {
-						self._showError(`<pre>다음과 같은 이유로 단축 URL을 생성하지 못하였습니다:\ncode = ${e.status}, message = ${e.responseText}</pre>`);
+						self._showError(`<pre>단축 URL 생성에 실패하였습니다.\n원인: code = ${e.status}, message = ${self._escapeHtml(e.responseText)}</pre>`);
 					} else {
-						self._showError(`<pre>다음과 같은 이유로 단축 URL을 생성하지 못하였습니다:\ncode = ${e.status}, message = (없음))</pre>`);
+						self._showError(`<pre>단축 URL 생성에 실패하였습니다.\n원인: code = ${e.status}, message = (없음)</pre>`);
 					}
 				}
 			});
+		},
+
+		_escapeHtml: function(text) {
+			return text
+				.replace(/</g, '&#60;')
+				.replace(/>/g, '&#62;');
 		},
 
 		_showShortUrl: function(url) {
@@ -50,7 +66,7 @@
 			this._resultRef.style.display = 'block';
 			this._currentResult = 'alert-primary';
 			this._resultRef.classList.add(this._currentResult);
-			this._resultRef.innerHTML = `<pre>단축 URL이 생성되었습니다.\n<a href="${url}">${url}</a></pre>`;
+			this._resultRef.innerHTML = `<pre>단축 URL이 생성되었습니다.\n<a href="${url}">${this._escapeHtml(url)}</a></pre>`;
 		},
 
 		_showError: function(message) {

@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,6 +46,7 @@ public class UrlControllerTest {
 				new ShortUrlDto(expectedShortUrl, inputUrl));
 
 		mockMvc.perform(post("/api/urls")
+				.with(csrf().asHeader())
 				.param("url", inputUrl)
 				.characterEncoding("UTF-8")
 				.accept(MediaType.APPLICATION_JSON_UTF8))
@@ -64,6 +66,7 @@ public class UrlControllerTest {
 				Optional.of(new ShortUrlDto(expectedShortUrl, inputUrl)));
 
 		mockMvc.perform(post("/api/urls")
+				.with(csrf().asHeader())
 				.param("url", inputUrl)
 				.characterEncoding("UTF-8")
 				.accept(MediaType.APPLICATION_JSON_UTF8))
@@ -72,6 +75,22 @@ public class UrlControllerTest {
 						.value(expectedShortUrl))
 				.andExpect(jsonPath("$.originalUrl")
 						.value(inputUrl));
+	}
+
+	@Test
+	public void urlsInvalidCsrf() throws Exception {
+		String inputUrl = "http://some.url.com/blahblah";
+
+		// CSRF 토큰이 없을 때
+		mockMvc.perform(post("/api/urls")
+				.param("url", inputUrl))
+				.andExpect(status().isForbidden());
+
+		// CSRF 토큰이 유효하지 않을 때
+		mockMvc.perform(post("/api/urls")
+				.with(csrf().useInvalidToken())
+				.param("url", inputUrl))
+				.andExpect(status().isForbidden());
 	}
 
 	@Test
