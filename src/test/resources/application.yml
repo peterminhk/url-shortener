@@ -14,3 +14,10 @@ logging:
     com.peterminhk.app.urlshortener: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
+
+custom:
+  short-url-prefix: http://localhost:8080/
+  shortening-key-queue:
+    capacity: 3
+    fill-threshold: 2
+    timeout: 500

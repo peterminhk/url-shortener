@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: "@spring.profiles.active@"
   datasource:
     platform: mysql
     url: jdbc:mysql://localhost:13306/urlshortener?useSSL=false
@@ -26,3 +28,36 @@ logging:
     com.peterminhk.app.urlshortener: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql: TRACE
+
+custom:
+  short-url-prefix: http://localhost:8080/
+  shortening-key-queue:
+    # Key를 저장할 queue의 크기
+    capacity: 3
+    # kqyQueue에 추가로 key를 채워 넣을 경계점. kqyQueue의 크기가 이 값 미만이 되면 key를 추가
+    # 로 채워넣는다.
+    fill-threshold: 3
+    # keyQueue에서 key를 꺼낼 때 기다릴 시간 (단위: ms)
+    timeout: 500
+
+---
+spring:
+  profiles: dev
+
+
+---
+spring:
+  profiles: prod
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  datasource:
+    initialization-mode: never
+
+logging:
+  level:
+    com.peterminhk.app.urlshortener: INFO
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql: WARN

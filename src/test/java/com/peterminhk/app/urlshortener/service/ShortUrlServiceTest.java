@@ -4,6 +4,7 @@ import com.peterminhk.app.urlshortener.MockBaseTest;
 import com.peterminhk.app.urlshortener.domain.ShortUrl;
 import com.peterminhk.app.urlshortener.dto.ShortUrlDto;
 import com.peterminhk.app.urlshortener.repository.ShortUrlRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,6 +22,8 @@ import static org.mockito.BDDMockito.given;
 @RunWith(SpringRunner.class)
 public class ShortUrlServiceTest extends MockBaseTest {
 
+	private static final String EXPECTED_URL_PREFIX = "http://te.st/";
+
 	@InjectMocks
 	private ShortUrlService shortUrlService;
 
@@ -29,6 +32,11 @@ public class ShortUrlServiceTest extends MockBaseTest {
 
 	@MockBean
 	private ShorteningKeyService shorteningKeyService;
+
+	@Before
+	public void setUp() throws NoSuchFieldException, IllegalAccessException {
+		initField(shortUrlService, "shortUrlPrefix", EXPECTED_URL_PREFIX);
+	}
 
 	@Test
 	public void findByOriginalUrl() {
@@ -43,7 +51,7 @@ public class ShortUrlServiceTest extends MockBaseTest {
 				.orElse(null);
 
 		assertNotNull(result);
-		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
+		assertEquals(EXPECTED_URL_PREFIX + expectedKey, result.getShortUrl());
 		assertEquals(expectedOriginalUrl, result.getOriginalUrl());
 	}
 
@@ -54,7 +62,7 @@ public class ShortUrlServiceTest extends MockBaseTest {
 
 		ShortUrlDto result = shortUrlService.generateShortUrl("http://some.url.com/blahblah");
 
-		assertEquals("http://localhost/" + expectedKey, result.getShortUrl());
+		assertEquals(EXPECTED_URL_PREFIX + expectedKey, result.getShortUrl());
 		assertEquals("http://some.url.com/blahblah", result.getOriginalUrl());
 	}
 

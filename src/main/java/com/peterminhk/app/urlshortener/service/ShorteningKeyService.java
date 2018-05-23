@@ -1,6 +1,7 @@
 package com.peterminhk.app.urlshortener.service;
 
 import com.peterminhk.app.urlshortener.domain.ShorteningKeySeq;
+import com.peterminhk.app.urlshortener.properties.ShorteningKeyQueueProperties;
 import com.peterminhk.app.urlshortener.repository.ShorteningKeySeqRepository;
 import com.peterminhk.app.urlshortener.util.ShorteningKeyGenerator;
 import org.slf4j.Logger;
@@ -21,26 +22,15 @@ public class ShorteningKeyService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShorteningKeyService.class);
 
-	// TODO capacity, threshold 조정
-	/** Key를 저장할 queue의 크기 */
-	private static final int KEY_QUEUE_CAPACITY = 3;
-
-	/**
-	 * kqyQueue에 추가로 key를 채워 넣을 경계점.
-	 * kqyQueue의 크기가 이 값 미만이 되면 key를 추가로 채워넣는다.
-	 */
-	private static final int KEY_QUEUE_FILL_THRESHOLD = 3;
-
-	/** keyQueue에서 key를 꺼낼 때 기다릴 시간 (단위: ms) */
-	private static final long KEY_QUEUE_TIMEOUT = 500;
+	@Autowired
+	private ShorteningKeyQueueProperties keyQueueProperties;
 
 	/** {@link #fillKeys}를 실행하는데 사용할 {@link Executor} */
 	private final ExecutorService executor = Executors.newSingleThreadExecutor(
 			runnable -> new Thread(runnable, "ShorteningKey"));
 
 	/** 미리 생성해 둔 key를 저장할 queue */
-	private ArrayBlockingQueue<String> keyQueue =
-			new ArrayBlockingQueue<>(KEY_QUEUE_CAPACITY);
+	private ArrayBlockingQueue<String> keyQueue;
 
 	/** key 생성에 사용할 seq */
 	private long nextSeq;
@@ -53,6 +43,8 @@ public class ShorteningKeyService {
 	 */
 	@PostConstruct
 	public void init() {
+		keyQueue = new ArrayBlockingQueue<>(keyQueueProperties.getCapacity());
+
 		ShorteningKeySeq seq = shorteningKeySeqRepository.findFirstBy()
 				.orElse(null);
 
@@ -83,9 +75,9 @@ public class ShorteningKeyService {
 	private synchronized void fillKeys() {
 		LOGGER.info("Filling keys");
 
-		if (keyQueue.size() >= KEY_QUEUE_FILL_THRESHOLD) {
+		if (keyQueue.size() >= keyQueueProperties.getFillThreshold()) {
 			LOGGER.info("Skip filling keys: queueSize = {}, threshold = {}",
-					keyQueue.size(), KEY_QUEUE_FILL_THRESHOLD);
+					keyQueue.size(), keyQueueProperties.getFillThreshold());
 			return;
 		}
 
@@ -116,12 +108,12 @@ public class ShorteningKeyService {
 		String key = null;
 
 		try {
-			key = keyQueue.poll(KEY_QUEUE_TIMEOUT, TimeUnit.MILLISECONDS);
+			key = keyQueue.poll(keyQueueProperties.getTimeout(), TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			LOGGER.error("Cannot get a new key", e);
 		}
 
-		if (keyQueue.size() < KEY_QUEUE_FILL_THRESHOLD) {
+		if (keyQueue.size() < keyQueueProperties.getFillThreshold()) {
 			fillKeysAsync();
 		}
 
