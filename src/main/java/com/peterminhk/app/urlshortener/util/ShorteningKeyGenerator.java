@@ -67,18 +67,22 @@ public final class ShorteningKeyGenerator {
 	 * @return key 배열
 	 */
 	public static String[] generateKeys(long beginSeq, int count) {
-		final String[] keys = new String[count];
-		final Random random = new Random();
+		final boolean[] usedSeqs = new boolean[count];
 		int randomIndex;
+
+		final String[] keys = new String[count];
 		int resultIndex = 0;
+
+		final Random random = new Random();
 
 		while (resultIndex < count) {
 			randomIndex = random.nextInt(count);
 
-			if (keys[randomIndex] != null) {
+			if (usedSeqs[randomIndex]) {
 				continue;
 			}
 
+			usedSeqs[randomIndex] = true;
 			keys[resultIndex] = generateKey(beginSeq + randomIndex);
 			resultIndex++;
 		}
