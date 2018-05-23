@@ -2,25 +2,81 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Url Shortener</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+<title>URL Shortener</title>
+<style>
+	html, body {
+		height: 100%;
+		margin: 0;
+		background-color: #3a4f65;
+		color: #fff;
+	}
+
+	.cover-container {
+		justify-content: center;
+		align-items: center;
+	}
+
+	h1 {
+		margin-bottom: 1rem;
+		font-size: 2rem;
+	}
+
+	.jumbotron {
+		text-align: center;
+		margin-bottom: 8rem;
+		background-color: #3a4f65;
+    width: 100%;
+		max-width: 800px;
+	}
+
+	.form-inline {
+		align-items: start;
+	}
+
+	.form-group.url {
+		flex: 1;
+		margin-right: 8px;
+	}
+
+	.form-inline .url .form-control {
+		width: 100%;
+	}
+
+	.result {
+		display: none;
+		margin-top: 1rem;
+	}
+
+	.alert pre {
+		font-size: inherit;
+    color: inherit;
+    margin: 0;
+	}
+</style>
 </head>
 <body>
-<h1>Url Shortener</h1>
-<form action="/urls" method="POST">
-	<label for="input-url">URL</label>
-	<input id="input-url" name="url" type="url" maxlength="2083" placeholder="URL을 입력하세요.">
-	<input id="submit" type="submit">
-</form>
-<section>
-	<div class="short-url"></div>
-	<div class="message"></div>
-</section>
+<div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+	<div class="jumbotron">
+		<h1>URL Shortener</h1>
+		<form class="form-inline" action="/urls" method="POST">
+			<div class="form-group url sm-1">
+				<label for="input-url" class="sr-only">URL</label>
+				<input class="form-control" id="input-url" name="url" type="url" maxlength="2083" placeholder="URL" required>
+			</div>
+			<button id="submit" class="btn btn-primary" type="submit">단축 URL 생성</button>
+		</form>
+		<div class="alert result" role="alert"></div>
+	</div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 <script src="/js/main.js"></script>
 <script>
 $(document).ready(function() {
-	new MainComponent().init();
+	window.MainComponent.init();
 });
 </script>
 </body>
