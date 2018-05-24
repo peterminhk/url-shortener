@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: "@spring.profiles.active@"
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
   datasource:
     platform: mysql
     url: jdbc:mysql://localhost:13306/urlshortener?useSSL=false
