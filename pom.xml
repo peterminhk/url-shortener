@@ -5,7 +5,7 @@
 
 	<groupId>com.peterminhk.app</groupId>
 	<artifactId>url-shortener</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<packaging>jar</packaging>
 
 	<name>url-shortener</name>
@@ -54,6 +54,21 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- //Data -->
+
+		<!-- Cache -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+		</dependency>
+		<!-- //Cache -->
 
 		<!-- Test -->
 		<dependency>
